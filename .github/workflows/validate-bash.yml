@@ -1,0 +1,22 @@
+name: Shell checks
+
+on:
+  push:
+    paths:
+      - "src/**/*.sh"
+      - ".github/workflows/validate-bash.yml"
+  pull_request:
+    paths:
+      - "src/**/*.sh"
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install ShellCheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+      - name: Check syntax
+        run: find src -type f -name '*.sh' -print0 | xargs -0 -r -n1 bash -n
+      - name: Lint scripts
+        run: find src -type f -name '*.sh' -print0 | xargs -0 -r shellcheck -x
